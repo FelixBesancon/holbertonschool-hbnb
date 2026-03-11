@@ -1,5 +1,6 @@
 from app import db, bcrypt
 from app.models.basemodel import BaseModel
+from sqlalchemy.orm import validates
 import re
 
 
@@ -35,10 +36,10 @@ class User(BaseModel):
 
     def __init__(self, first_name, last_name, email, password, is_admin=False):
         """
-         Initialize a User instance.
+        Initialize a User instance.
 
         The constructor validates and assigns user attributes using
-        dedicated setter methods before hashing and storing the password.
+        dedicated validation methods before hashing and storing the password.
 
         Args:
             first_name (str): User's first name. Must be a string with a
@@ -53,13 +54,14 @@ class User(BaseModel):
                                        administrative privileges.
                                        Defaults to False.
         """
-        self.set_first_name(first_name)
-        self.set_last_name(last_name)
-        self.set_email(email)
-        self.set_is_admin(is_admin)
+        self.first_name = first_name
+        self.last_name = last_name
+        self.email = email
+        self.is_admin = is_admin
         self.hash_password(password)
 
-    def set_first_name(self, value):
+    @validates("first_name")
+    def validate_first_name(self, key, value):
         """
         Validate and assign the user's first name.
 
@@ -73,9 +75,10 @@ class User(BaseModel):
         if not isinstance(value, str):
             raise TypeError("First name must be a string")
         super().is_max_length('First name', value, 50)
-        self.first_name = value
+        return value
 
-    def set_last_name(self, value):
+    @validates("last_name")
+    def validate_last_name(self, key, value):
         """
         Validate and assign the user's last name.
 
@@ -89,9 +92,10 @@ class User(BaseModel):
         if not isinstance(value, str):
             raise TypeError("Last name must be a string")
         super().is_max_length('Last name', value, 50)
-        self.last_name = value
+        return value
 
-    def set_email(self, value):
+    @validates("email")
+    def validate_email(self, key, value):
         """
         Validate and assign the user's email address.
 
@@ -106,8 +110,10 @@ class User(BaseModel):
             raise TypeError("Email must be a string")
         if not re.match(r"[^@]+@[^@]+\.[^@]+", value):
             raise ValueError("Invalid email format")
+        return value
 
-    def set_is_admin(self, value):
+    @validates("is_admin")
+    def validate_is_admin(self, key, value):
         """
         Validate and assign the administrative status of the user.
 
@@ -120,7 +126,7 @@ class User(BaseModel):
         """
         if not isinstance(value, bool):
             raise TypeError("Is Admin must be a boolean")
-        self.is_admin = value
+        return value
 
     def to_dict(self):
         """

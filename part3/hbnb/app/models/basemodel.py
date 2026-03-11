@@ -67,7 +67,11 @@ class BaseModel(db.Model):
             - After updating the attributes, the `updated_at` timestamp
               is refreshed using the `save()` method.
         """
+        protected_fields = {"id", "created_at", "updated_at"}
+
         for key, value in data.items():
+            if key in protected_fields:
+                raise ValueError(f"The {key} cannot be updated")
             if hasattr(self, key):
                 setattr(self, key, value)
 

@@ -1,5 +1,6 @@
 from app import db
 from app.models.basemodel import BaseModel
+from sqlalchemy.orm import validates
 
 
 class Review(BaseModel):
@@ -34,10 +35,11 @@ class Review(BaseModel):
                         a maximum length of 1024 characters.
             rating (int): Review rating. Must be an integer between 1 and 5.
         """
-        self.set_text(text)
-        self.set_rating(rating)
+        self.text = text
+        self.rating = rating
 
-    def set_text(self, value):
+    @validates("text")
+    def validate_text(self, key, value):
         """
         Validate and assign the review text.
 
@@ -53,9 +55,10 @@ class Review(BaseModel):
         if not isinstance(value, str):
             raise TypeError("Text must be a string")
         super().is_max_length('Text', value, 1024)
-        self.text = value
+        return value
 
-    def set_rating(self, value):
+    @validates("rating")
+    def validate_rating(self, key, value):
         """
         Validate and assign the review rating.
 
@@ -69,7 +72,7 @@ class Review(BaseModel):
         if not isinstance(value, int) or type(value) is bool:
             raise TypeError("Rating must be an integer")
         super().is_between('Rating', value, 1, 5)
-        self.rating = value
+        return value
 
     def to_dict(self):
         """

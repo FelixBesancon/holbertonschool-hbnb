@@ -1,5 +1,6 @@
 from app import db
 from app.models.basemodel import BaseModel
+from sqlalchemy.orm import validates
 
 
 class Place(BaseModel):
@@ -49,13 +50,14 @@ class Place(BaseModel):
             description (str, optional): Optional textual description of
                                          the place. Maximum length 1024.
         """
-        self.set_title(title)
-        self.set_price(price)
-        self.set_latitude(latitude)
-        self.set_longitude(longitude)
-        self.set_description(description)
+        self.title = title
+        self.price = price
+        self.latitude = latitude
+        self.longitude = longitude
+        self.description = description
 
-    def set_title(self, value):
+    @validates("title")
+    def validate_title(self, key, value):
         """
         Validate and assign the title of the place.
 
@@ -71,9 +73,10 @@ class Place(BaseModel):
         if not isinstance(value, str):
             raise TypeError("Title must be a string")
         super().is_max_length('Title', value, 100)
-        self.title = value
+        return value
 
-    def set_price(self, value):
+    @validates("price")
+    def validate_price(self, key, value):
         """
         Validate and assign the price of the place.
 
@@ -88,9 +91,10 @@ class Place(BaseModel):
             raise TypeError("Price must be a float")
         if value < 0:
             raise ValueError("Price must be positive.")
-        self.price = float(value)
+        return float(value)
 
-    def set_latitude(self, value):
+    @validates("latitude")
+    def validate_latitude(self, key, value):
         """
         Validate and assign the latitude of the place.
 
@@ -104,9 +108,10 @@ class Place(BaseModel):
         if not isinstance(value, (float, int)) or type(value) is bool:
             raise TypeError("Latitude must be a float")
         super().is_between("Latitude", value, -90, 90)
-        self.latitude = float(value)
+        return float(value)
 
-    def set_longitude(self, value):
+    @validates("longitude")
+    def validate_longitude(self, key, value):
         """
         Validate and assign the longitude of the place.
 
@@ -120,9 +125,10 @@ class Place(BaseModel):
         if not isinstance(value, (float, int)) or type(value) is bool:
             raise TypeError("Longitude must be a float")
         super().is_between("Longitude", value, -180, 180)
-        self.longitude = float(value)
+        return float(value)
 
-    def set_description(self, value):
+    @validates("description")
+    def validate_description(self, key, value):
         """
         Validate and assign the description of the place.
 
@@ -137,7 +143,7 @@ class Place(BaseModel):
             if not isinstance(value, str):
                 raise TypeError("Description must be a string")
             super().is_max_length('Description', value, 1024)
-        self.description = value
+        return value
 
     def to_dict(self):
         """
