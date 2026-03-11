@@ -2,6 +2,22 @@ from app import db
 from app.models.basemodel import BaseModel
 from sqlalchemy.orm import validates
 
+# Creation of a table to manage the many-to-many relationship
+# between Place and Amenity
+place_amenity = db.Table(
+    'place_amenity',
+    db.Column(
+        'place_id', db.String(36),
+        db.ForeignKey('places.id'),
+        primary_key=True
+        ),
+    db.Column(
+        'amenity_id', db.String(36),
+        db.ForeignKey('amenities.id'),
+        primary_key=True
+    )
+)
+
 
 class Place(BaseModel):
     """
@@ -29,6 +45,20 @@ class Place(BaseModel):
     price = db.Column(db.Float, nullable=False)
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
+    user_id = db.Column(
+        db.String(36),
+        db.ForeignKey('users.id'),
+        nullable=False)
+    amenities = db.relationship(
+        'Amenity',
+        secondary=place_amenity,
+        lazy='subquery',
+        backref=db.backref('places', lazy='select')
+        )
+    reviews = db.relationship(
+        'Review', backref='place',
+        lazy='select'
+        )
 
     def __init__(self, title, price, latitude, longitude, description=None):
         """
