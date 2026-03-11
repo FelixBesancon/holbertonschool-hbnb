@@ -24,7 +24,7 @@ class BaseModel(db.Model):
           a database table for it.
         - Child classes inherit the columns and utility methods defined here.
     """
-    # This ensures SQLAlchemy does not create a table for BaseModel
+
     __abstract__ = True
 
     id = db.Column(
@@ -71,7 +71,6 @@ class BaseModel(db.Model):
             if hasattr(self, key):
                 setattr(self, key, value)
 
-        # Update the updated_at timestamp
         self.save()
 
     def is_max_length(self, name, value, max_length):

@@ -1,5 +1,5 @@
 from app import db
-from app.models.base_model import BaseModel
+from app.models.basemodel import BaseModel
 
 
 class Review(BaseModel):
@@ -36,14 +36,7 @@ class Review(BaseModel):
         """
         self.set_text(text)
         self.set_rating(rating)
-#       self.place = place
-#       self.user = user
-#
-#   @property
-#   def text(self):
-#       return self.__text
 
-#   @text.setter
     def set_text(self, value):
         """
         Validate and assign the review text.
@@ -61,12 +54,7 @@ class Review(BaseModel):
             raise TypeError("Text must be a string")
         super().is_max_length('Text', value, 1024)
         self.text = value
-#
-#   @property
-#   def rating(self):
-#       return self.__rating
 
-#   @rating.setter
     def set_rating(self, value):
         """
         Validate and assign the review rating.
@@ -82,26 +70,6 @@ class Review(BaseModel):
             raise TypeError("Rating must be an integer")
         super().is_between('Rating', value, 1, 5)
         self.rating = value
-#
-#   @property
-#   def place(self):
-#       return self.__place
-#
-#   @place.setter
-#   def place(self, value):
-#       if not isinstance(value, Place):
-#           raise TypeError("Place must be a place instance")
-#       self.__place = value
-#
-#   @property
-#   def user(self):
-#       return self.__user
-#
-#   @user.setter
-#   def user(self, value):
-#       if not isinstance(value, User):
-#           raise TypeError("User must be a user instance")
-#       self.__user = value
 
     def to_dict(self):
         """
@@ -115,5 +83,3 @@ class Review(BaseModel):
             'text': self.text,
             'rating': self.rating,
         }
-#           'place_id': self.place.id,
-#           'user_id': self.user.id

@@ -1,5 +1,5 @@
 from app import db
-from app.models.base_model import BaseModel
+from app.models.basemodel import BaseModel
 
 
 class Amenity(BaseModel):
@@ -16,8 +16,8 @@ class Amenity(BaseModel):
             - updated_at timestamp
             - validation helpers (e.g. is_max_length, is_between)
 
-        Relationships with other entities (such as Place) are intentionally not
-        implemented at this stage and will be added in later tasks.
+    Relationships with other entities (such as Place) are intentionally not
+    implemented at this stage and will be added in later tasks.
     """
 
     __tablename__ = 'amenities'
@@ -32,14 +32,8 @@ class Amenity(BaseModel):
             name (str): Name of the amenity. Must be a non-empty string with
                         a maximum length of 50 characters.
         """
-#       super().__init__()
         self.set_name(name)
-#
-#    @property
-#    def name(self):
-#        return self.__name
 
-#    @name.setter
     def set_name(self, value):
         """
         Validate and assign the amenity name.

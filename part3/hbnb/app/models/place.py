@@ -1,5 +1,5 @@
 from app import db
-from app.models.base_model import BaseModel
+from app.models.basemodel import BaseModel
 
 
 class Place(BaseModel):
@@ -49,21 +49,12 @@ class Place(BaseModel):
             description (str, optional): Optional textual description of
                                          the place. Maximum length 1024.
         """
-#        super().__init__()
         self.set_title(title)
         self.set_price(price)
         self.set_latitude(latitude)
         self.set_longitude(longitude)
         self.set_description(description)
-#        self.set_owner(owner)
-#        self.reviews = []  # List to store related reviews
-#        self.amenities = []  # List to store related amenities
-#
-#    @property
-#    def title(self):
-#        return self.__title
 
-#    @title.setter
     def set_title(self, value):
         """
         Validate and assign the title of the place.
@@ -81,12 +72,7 @@ class Place(BaseModel):
             raise TypeError("Title must be a string")
         super().is_max_length('Title', value, 100)
         self.title = value
-#
-#    @property
-#    def price(self):
-#        return self.__price
 
-#    @price.setter
     def set_price(self, value):
         """
         Validate and assign the price of the place.
@@ -103,12 +89,7 @@ class Place(BaseModel):
         if value < 0:
             raise ValueError("Price must be positive.")
         self.price = float(value)
-#
-#    @property
-#    def latitude(self):
-#        return self.__latitude
 
-#    @latitude.setter
     def set_latitude(self, value):
         """
         Validate and assign the latitude of the place.
@@ -124,12 +105,7 @@ class Place(BaseModel):
             raise TypeError("Latitude must be a float")
         super().is_between("Latitude", value, -90, 90)
         self.latitude = float(value)
-#
-#    @property
-#    def longitude(self):
-#        return self.__longitude
 
-#    @longitude.setter
     def set_longitude(self, value):
         """
         Validate and assign the longitude of the place.
@@ -145,28 +121,6 @@ class Place(BaseModel):
             raise TypeError("Longitude must be a float")
         super().is_between("Longitude", value, -180, 180)
         self.longitude = float(value)
-
-#    @property
-#    def owner(self):
-#        return self.__owner
-#
-#    @owner.setter
-#    def set_owner(self, value):
-#        if not isinstance(value, User):
-#            raise TypeError("Owner must be a user instance")
-#        self.__owner = value
-#
-#    def add_review(self, review):
-#        """Add a review to the place."""
-#        self.reviews.append(review)
-#
-#    def delete_review(self, review):
-#        """Add an amenity to the place."""
-#        self.reviews.remove(review)
-#
-#    def add_amenity(self, amenity):
-#        """Add an amenity to the place."""
-#        self.amenities.append(amenity)
 
     def set_description(self, value):
         """
@@ -203,17 +157,3 @@ class Place(BaseModel):
             'latitude': self.latitude,
             'longitude': self.longitude,
         }
-#            'owner_id': self.owner.id
-#
-#    def to_dict_list(self):
-#        return {
-#            'id': self.id,
-#            'title': self.title,
-#            'description': self.description,
-#            'price': self.price,
-#            'latitude': self.latitude,
-#            'longitude': self.longitude,
-#            'owner': self.owner.to_dict(),
-#            'amenities': self.amenities,
-#            'reviews': self.reviews
-#        }
