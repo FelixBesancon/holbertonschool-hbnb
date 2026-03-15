@@ -53,11 +53,15 @@ class Place(BaseModel):
         'Amenity',
         secondary=place_amenity,
         lazy='subquery',
+        # No delete-orphan here
+        # removing a Place only clears the join table, Amenities are preserved.
         backref=db.backref('places', lazy='select')
         )
     reviews = db.relationship(
         'Review', backref='place',
-        lazy='select'
+        lazy='select',
+        # Deleting a Place automatically deletes all its associated Reviews.
+        cascade='all, delete-orphan'
         )
 
     def __init__(self, title, price, latitude, longitude, description=None):

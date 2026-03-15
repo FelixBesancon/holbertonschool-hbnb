@@ -25,10 +25,11 @@ class Repository(ABC):
     @abstractmethod
     def get(self, obj_id):
         """
-        Persist a new object in the repository.
-
+        Retrieve a single object by its unique identifier.
         Args:
-            obj: The object instance to store.
+            obj_id (str): Unique identifier of the object.
+        Returns:
+            object | None: The matching object if found, otherwise None.
         """
         pass
 
@@ -45,10 +46,10 @@ class Repository(ABC):
     @abstractmethod
     def update(self, obj_id, data):
         """
-        Retrieve all objects stored in the repository.
-
-        Returns:
-            list: A list containing all stored objects.
+        Update an existing object with new data.
+        Args:
+            obj_id (str): Unique identifier of the object to update.
+            data (dict): Dictionary containing the new values.
         """
         pass
 
