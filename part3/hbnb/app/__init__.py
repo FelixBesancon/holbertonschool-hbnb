@@ -12,13 +12,32 @@ bcrypt = Bcrypt()
 
 
 def create_app(config_class=DevelopmentConfig):
+    """
+    Application factory for the HBnB API.
+
+    This function creates and configures the Flask application instance,
+    initializes the extensions used by the project, and registers all
+    API namespaces.
+
+    The application relies on:
+        - Flask-SQLAlchemy for database management
+        - Flask-Bcrypt for password hashing
+        - Flask-JWT-Extended for authentication and authorization
+        - Flask-RESTx for API routing and documentation
+
+    Args:
+        config_class (type, optional): Configuration class used to configure
+            the Flask application. Defaults to DevelopmentConfig.
+
+    Returns:
+        Flask: The fully configured Flask application instance.
+    """
     app = Flask(__name__)
     app.config.from_object(config_class)
 
     db.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
-
 
     from app.api.v1.users import api as users_ns
     from app.api.v1.amenities import api as amenities_ns

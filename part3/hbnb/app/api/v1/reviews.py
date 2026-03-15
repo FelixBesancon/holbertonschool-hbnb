@@ -6,14 +6,29 @@ api = Namespace('reviews', description='Review operations')
 
 # Define the review model for input validation and documentation
 review_model = api.model('Review', {
-    'text': fields.String(required=True, description='Text of the review'),
-    'rating': fields.Integer(required=True, description='Rating of the place (1-5)'),
-    'user_id': fields.String(description='ID of the user'),
-    'place_id': fields.String(required=True, description='ID of the place')
+    'text': fields.String(
+        required=True,
+        description='Text of the review'
+        ),
+    'rating': fields.Integer(
+        required=True,
+        description='Rating of the place (1-5)'
+        ),
+    'user_id': fields.String(
+        description='ID of the user'
+        ),
+    'place_id': fields.String(
+        required=True,
+        description='ID of the place'
+        )
 })
+
 
 @api.route('/')
 class ReviewList(Resource):
+    """
+    Resource for creating a new review and retrieving all reviews.
+    """
     @api.expect(review_model)
     @api.response(201, 'Review successfully created')
     @api.response(400, 'Invalid input data')
@@ -34,7 +49,7 @@ class ReviewList(Resource):
 
         if not is_admin and place.owner.id == user:
             return {'error': 'You cannot review your own place'}, 400
-        
+
         for review in place.reviews:
             if not is_admin and review.user_id == user:
                 return {'error': 'You have already reviewed this place.'}, 400
@@ -50,8 +65,12 @@ class ReviewList(Resource):
         """Retrieve a list of all reviews"""
         return [review.to_dict() for review in facade.get_all_reviews()], 200
 
+
 @api.route('/<review_id>')
 class ReviewResource(Resource):
+    """
+    Resource for retrieving, updating, and deleting a specific review.
+    """
     @api.response(200, 'Review details retrieved successfully')
     @api.response(404, 'Review not found')
     def get(self, review_id):
@@ -100,7 +119,6 @@ class ReviewResource(Resource):
 
         if not is_admin and review.user_id != user:
             return {'error': 'Unauthorized action'}, 403
-
 
         try:
             facade.delete_review(review_id)

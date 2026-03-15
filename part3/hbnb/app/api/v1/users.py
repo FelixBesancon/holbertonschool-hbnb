@@ -5,10 +5,22 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 api = Namespace('users', description='User operations')
 
 user_model = api.model('User', {
-    'first_name': fields.String(required=True, description='First name of the user'),
-    'last_name': fields.String(required=True, description='Last name of the user'),
-    'email': fields.String(required=True, description='Email of the user'),
-    'password': fields.String(required=True, description='Password of the user')
+    'first_name': fields.String(
+        required=True,
+        description='First name of the user'
+        ),
+    'last_name': fields.String(
+        required=True,
+        description='Last name of the user'
+        ),
+    'email': fields.String(
+        required=True,
+        description='Email of the user'
+        ),
+    'password': fields.String(
+        required=True,
+        description='Password of the user'
+        )
 })
 
 update_model = api.model('UserUpdate', {
@@ -21,6 +33,9 @@ update_model = api.model('UserUpdate', {
 
 @api.route('/')
 class UserList(Resource):
+    """
+    Resource for creating a new user and retrieving all users.
+    """
     @api.expect(user_model, validate=True)
     @api.response(201, 'User successfully created')
     @api.response(409, 'Email already registered')
@@ -58,6 +73,9 @@ class UserList(Resource):
 
 @api.route('/<user_id>')
 class UserResource(Resource):
+    """
+    Resource for retrieving and updating a specific user.
+    """
     @api.response(200, 'User details retrieved successfully')
     @api.response(404, 'User not found')
     def get(self, user_id):

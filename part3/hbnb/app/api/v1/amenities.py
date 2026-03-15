@@ -3,7 +3,6 @@ from app.services import facade
 from flask_jwt_extended import jwt_required, get_jwt
 
 
-
 api = Namespace('amenities', description='Amenity operations')
 
 # Define the amenity model for input validation and documentation
@@ -11,8 +10,12 @@ amenity_model = api.model('Amenity', {
     'name': fields.String(required=True, description='Name of the amenity')
 })
 
+
 @api.route('/')
 class AmenityList(Resource):
+    """
+    Resource for creating a new amenity and retrieving all amenities.
+    """
     @api.expect(amenity_model)
     @api.response(201, 'Amenity successfully created')
     @api.response(400, 'Invalid input data')
@@ -20,14 +23,17 @@ class AmenityList(Resource):
     def post(self):
         """Register a new amenity"""
         amenity_data = api.payload
-        
+
         claims = get_jwt()
         is_admin = claims.get("is_admin", False)
 
         if not is_admin:
             return {'error': 'Admin privileges required'}, 403
 
-        existing_amenity = facade.amenity_repo.get_by_attribute('name', amenity_data.get('name'))
+        existing_amenity = facade.amenity_repo.get_by_attribute(
+            'name',
+            amenity_data.get('name')
+            )
         if existing_amenity:
             return {'error': 'Invalid input data'}, 400
         try:
@@ -45,6 +51,9 @@ class AmenityList(Resource):
 
 @api.route('/<amenity_id>')
 class AmenityResource(Resource):
+    """
+    Resource for retrieving and updating a specific amenity.
+    """
     @api.response(200, 'Amenity details retrieved successfully')
     @api.response(404, 'Amenity not found')
     def get(self, amenity_id):
@@ -60,12 +69,26 @@ class AmenityResource(Resource):
     @api.response(400, 'Invalid input data')
     @jwt_required()
     def put(self, amenity_id):
+        """
+        Update an amenity by its unique identifier.
+
+        This endpoint is restricted to administrators. It validates that the
+        amenity exists before applying the requested updates.
+
+        Args:
+            amenity_id (str): Unique identifier of the amenity to update.
+
+        Returns:
+            tuple:
+                - dict: Success or error message
+                - int: HTTP status code
+        """
         amenity_data = api.payload
 
         claims = get_jwt()
         is_admin = claims.get("is_admin", False)
 
-        if not is_admin :
+        if not is_admin:
             return {'error': 'Admin privileges required'}, 403
 
         amenity = facade.get_amenity(amenity_id)
