@@ -35,11 +35,15 @@ class User(BaseModel):
     is_admin = db.Column(db.Boolean, default=False)
     places = db.relationship(
         'Place', backref='user',
-        lazy='select'
+        lazy='select',
+        # Deleting a User automatically deletes all their associated Places.
+        cascade='all, delete-orphan'
         )
     reviews = db.relationship(
         'Review', backref='user',
-        lazy='select'
+        lazy='select',
+        # Deleting a User automatically deletes all their associated Reviews.
+        cascade='all, delete-orphan'
         )
 
     def __init__(self, first_name, last_name, email, password, is_admin=False):

@@ -105,13 +105,13 @@ class UserResource(Resource):
         if not is_admin and current_user != user_id:
             return {'error': 'Unauthorized action'}, 403
 
+        if not is_admin and ('email' in user_data or 'password' in user_data):
+            return {'error': 'You cannot modify email or password'}, 400
+
         if 'email' in user_data:
             existing_user = facade.get_user_by_email(user_data['email'])
             if existing_user and existing_user.id != user_id:
                 return {'error': 'Email already in use'}, 400
-
-        if not is_admin and ('email' in user_data or 'password' in user_data):
-            return {'error': 'You cannot modify email or password'}, 400
 
         try:
             facade.update_user(user_id, user_data)

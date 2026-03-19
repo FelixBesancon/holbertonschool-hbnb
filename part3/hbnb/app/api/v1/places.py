@@ -1,5 +1,6 @@
 from flask_restx import Namespace, Resource, fields
 from app.services import facade
+from app import db
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 
 api = Namespace('places', description='Place operations')
@@ -90,7 +91,7 @@ class PlaceResource(Resource):
         place = facade.get_place(place_id)
         if not place:
             return {'error': 'Place not found'}, 404
-        return place.to_dict_list(), 200
+        return place.to_dict(), 200
 
     @api.expect(place_model)
     @api.response(200, 'Place updated successfully')
@@ -155,8 +156,11 @@ class PlaceAmenities(Resource):
             if not a:
                 return {'error': 'Invalid input data'}, 400
 
-        for amenity in amenities_data:
-            place.add_amenity(amenity)
+        for amenity_data_item in amenities_data:
+            amenity_obj = facade.get_amenity(amenity_data_item['id'])
+            place.amenities.append(amenity_obj)
+
+        db.session.commit()
         return {'message': 'Amenities added successfully'}, 200
 
 

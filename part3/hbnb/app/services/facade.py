@@ -42,7 +42,6 @@ class HBnBFacade:
             User: The newly created and persisted user.
         """
         user = User(**user_data)
-        user.hash_password(user_data['password'])
         self.user_repo.add(user)
         return user
 
@@ -155,20 +154,27 @@ class HBnBFacade:
         user = self.user_repo.get_by_attribute('id', place_data['owner_id'])
         if not user:
             raise KeyError('Invalid input data')
-        del place_data['owner_id']
-        place_data['owner'] = user
+
+        owner_id = place_data.pop('owner_id')
         amenities = place_data.pop('amenities', None)
+
+        # Validate amenities before creation
+        amenity_objects = []
         if amenities:
             for a in amenities:
                 amenity = self.get_amenity(a['id'])
                 if not amenity:
                     raise KeyError('Invalid input data')
+                amenity_objects.append(amenity)
+
         place = Place(**place_data)
+        place.user_id = owner_id  # assigner la FK directement
+
+        # Link amenities through SQLAlchemy relations
+        for amenity in amenity_objects:
+            place.amenities.append(amenity)
+
         self.place_repo.add(place)
-        user.add_place(place)
-        if amenities:
-            for amenity in amenities:
-                place.add_amenity(amenity)
         return place
 
     def get_place(self, place_id):
@@ -222,19 +228,19 @@ class HBnBFacade:
         user = self.user_repo.get(review_data['user_id'])
         if not user:
             raise KeyError('Invalid input data')
-        del review_data['user_id']
-        review_data['user'] = user
 
         place = self.place_repo.get(review_data['place_id'])
         if not place:
             raise KeyError('Invalid input data')
-        del review_data['place_id']
-        review_data['place'] = place
 
-        review = Review(**review_data)
+        review = Review(
+            text=review_data['text'],
+            rating=review_data['rating']
+        )
+        review.user_id = review_data['user_id']  # assigner les FKs directement
+        review.place_id = review_data['place_id']
+
         self.review_repo.add(review)
-        user.add_review(review)
-        place.add_review(review)
         return review
 
     def get_review(self, review_id):
@@ -288,19 +294,9 @@ class HBnBFacade:
 
     def delete_review(self, review_id):
         """
-        Delete an existing review.
-
-        The review is removed both from the database and from the related
-        user and place collections.
+        Delete an existing review from the database.
 
         Args:
             review_id (str): Unique identifier of the review to delete.
         """
-        review = self.review_repo.get(review_id)
-
-        user = self.user_repo.get(review.user.id)
-        place = self.place_repo.get(review.place.id)
-
-        user.delete_review(review)
-        place.delete_review(review)
         self.review_repo.delete(review_id)
