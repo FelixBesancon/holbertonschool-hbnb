@@ -71,3 +71,9 @@ dist/
 # =========================
 .env
 .env.*
+
+# =========================
+# Base de données de test
+# =========================
+test_db/test.db
+test_db/initial_data.sql
