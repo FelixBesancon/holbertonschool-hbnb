@@ -1,6 +1,6 @@
 from app import db
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 class BaseModel(db.Model):
@@ -33,12 +33,12 @@ class BaseModel(db.Model):
         )
     created_at = db.Column(
         db.DateTime,
-        default=datetime.utcnow
+        default=lambda: datetime.now(timezone.utc)
         )
     updated_at = db.Column(
         db.DateTime,
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc)
         )
 
     def save(self):
@@ -52,7 +52,7 @@ class BaseModel(db.Model):
             This method does not commit changes to the database. The commit
             operation is handled by the repository layer.
         """
-        self.updated_at = datetime.utcnow()
+        self.updated_at = datetime.now(timezone.utc)
 
     def update(self, data):
         """
