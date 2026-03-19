@@ -48,9 +48,9 @@ hbnb/
 │   │   ├── __init__.py
 │   │   ├── repository.py
 │   │   ├── user_repository.py
-├── tests/
-│   ├── test_places.py
-│   ├── ...
+├── test_db/
+│   ├── test_db.py
+├── schema.sql
 ├── run.py
 ├── config.py
 ├── requirements.txt
@@ -252,14 +252,35 @@ erDiagram
 
 ---
 
-## 8. API Documentation
+## 8. Database Testing
+
+SQL scripts are provided to generate and test the database schema independently of the ORM.
+
+### Files
+- `schema.sql` — full database schema in raw SQL
+- `test_db/test_db.py` — generates initial data and runs full CRUD tests with cascade verification
+
+### Run the tests
+```bash
+python3 test_db/test_db.py
+```
+
+### What is tested:
+- CREATE: admin user, 2 regular users, 2 places, 3 amenities, 1 review
+- READ: all entities with joins
+- UPDATE: place price, review text/rating, user name
+- DELETE: user deletion with cascade verification (place, reviews, amenity links)
+
+---
+
+## 9. API Documentation
 
 Available at:
  - http://localhost:5000/api/v1/
 
 ---
 
-## 9. Key Features
+## 10. Key Features
 
  - JWT Authentication
  - Role-based authorization (admin / user)
@@ -272,7 +293,7 @@ Available at:
 
 ---
 
-## 10. Validation Rules
+## 11. Validation Rules
 
  - Required fields enforced
  - Types validated
@@ -282,7 +303,7 @@ Available at:
 
 ---
 
-## 11. Architectural Principles
+## 12. Architectural Principles
 
  - Application Factory Pattern
  - RESTful API design
@@ -295,7 +316,7 @@ Available at:
 
 ---
 
-## 12. Authors
+## 13. Authors
 
 Project developed as part of the Holberton School curriculum.
 
