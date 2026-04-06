@@ -270,14 +270,111 @@ erDiagram
 
 ---
 
-## 8. API Documentation
+## 8. Setup & Testing
+
+### Prerequisites
+- Python 3.8+
+- Virtual environment tool (venv)
+
+### Backend Setup (API)
+
+1. Navigate to the project directory:
+   ```bash
+   cd holbertonschool-hbnb/part4/hbnb
+   ```
+
+2. Create and activate virtual environment:
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate
+   ```
+
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Create a test user in the database:
+   ```bash
+   python - <<'PY'
+   from app import create_app, db
+   from app.models.user import User
+   
+   app = create_app()
+   with app.app_context():
+       db.create_all()
+       
+       # Create a test user
+       user = User(
+           first_name='Demo',
+           last_name='User',
+           email='demo.user@hbnb.io',
+           password='demo1234',
+           is_admin=False
+       )
+       db.session.add(user)
+       db.session.commit()
+       print('Test user created: demo.user@hbnb.io')
+   PY
+   ```
+
+5. Start the backend API:
+   ```bash
+   python run.py
+   ```
+   The API will run on http://127.0.0.1:5000
+
+### Frontend Setup
+
+1. In a new terminal, navigate to the front directory:
+   ```bash
+   cd holbertonschool-hbnb/part4/hbnb/front
+   ```
+
+2. Start a local web server:
+   ```bash
+   python -m http.server 8000
+   ```
+   The frontend will be available at http://localhost:8000
+
+### Testing Authentication (Task 2)
+
+1. Open http://localhost:8000/login.html in your browser
+2. Enter the test credentials:
+   - **Email:** demo.user@hbnb.io
+   - **Password:** demo1234
+3. Click "Login"
+4. Expected result:
+   - JWT token stored in cookie (`token`)
+   - Redirect to index.html
+   - Successful login message
+
+### API Testing with curl
+
+Test the login endpoint directly:
+```bash
+curl -X POST http://127.0.0.1:5000/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"demo.user@hbnb.io","password":"demo1234"}'
+```
+
+Expected response:
+```json
+{
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc3NTQ4MDAzMywianRpIjoiM2ViMjM2ZWMtNmQzZS00ZmE0LWJhZmMtZDAxMzYwODEyM2UxIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImM1MjFkYWM2LThiMWMtNDg5MC1iMzdjLTQxMWJhYzBjNjE1NyIsIm5iZiI6MTc3NTQ4MDAzMywiY3NyZiI6IjBhZWJmN2JhLTg5MmYtNGFmNy04Y2RhLTE5NmExMGE3ZGE0YyIsImV4cCI6MTc3NTQ4MDkzMywiaXNfYWRtaW4iOmZhbHNlfQ.JfMa4sBtmsqr-7-JmW19E21NOLrARcKOWrIO7-TvnfU"
+}
+```
+
+---
+
+## 9. API Documentation
 
 Available at:
  - http://localhost:5000/api/v1/
 
 ---
 
-## 9. Key Features
+## 10. Key Features
 
  - JWT Authentication
  - Role-based authorization (admin / user)
@@ -291,7 +388,7 @@ Available at:
 
 ---
 
-## 10. Validation Rules
+## 11. Validation Rules
 
  - Required fields enforced
  - Types validated
