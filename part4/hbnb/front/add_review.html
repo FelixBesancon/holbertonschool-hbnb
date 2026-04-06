@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Review</title>
-    <link rel="icon" type="image/png" href="images/icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/icon.png">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -19,12 +20,13 @@
         <!-- Add something to idfentify the place you're reviewing -->
         <form id="review-form">
             <h2>Add a Review</h2>
+            <p id="review-place-context"></p>
             <label for="review">Your Review:</label>
             <textarea id="review" name="review" required></textarea>
             <label for="rating">Rating:</label>
-            <select id="rating" name="rating" required>
-                <!-- Options for rating -->
-            </select>
+            <div id="star-rating" class="star-rating" role="radiogroup" aria-label="Rating"></div>
+            <input type="hidden" id="rating" name="rating" value="0" required>
+            <p id="review-form-error" role="alert" style="display: none;"></p>
             <button type="submit">Submit Review</button>
         </form>
     </main>

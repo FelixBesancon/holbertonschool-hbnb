@@ -189,6 +189,15 @@ class Place(BaseModel):
         Returns:
             dict: A dictionary containing the place attributes.
         """
+        owner = None
+        if self.user is not None:
+            owner = {
+                'id': self.user.id,
+                'first_name': self.user.first_name,
+                'last_name': self.user.last_name,
+                'email': self.user.email
+            }
+
         return {
             'id': self.id,
             'title': self.title,
@@ -196,4 +205,7 @@ class Place(BaseModel):
             'price': self.price,
             'latitude': self.latitude,
             'longitude': self.longitude,
+            'owner_id': self.user_id,
+            'owner': owner,
+            'amenities': [amenity.to_dict() for amenity in self.amenities]
         }

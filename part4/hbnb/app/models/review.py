@@ -91,8 +91,20 @@ class Review(BaseModel):
         Returns:
             dict: A dictionary containing the review attributes.
         """
+        author = None
+        if self.user is not None:
+            author = {
+                'id': self.user.id,
+                'first_name': self.user.first_name,
+                'last_name': self.user.last_name,
+                'email': self.user.email
+            }
+
         return {
             'id': self.id,
             'text': self.text,
             'rating': self.rating,
+            'user_id': self.user_id,
+            'place_id': self.place_id,
+            'author': author
         }

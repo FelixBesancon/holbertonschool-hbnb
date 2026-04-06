@@ -23,6 +23,9 @@
     --text-soft: #426366;
     --brand: #81b5bb;
     --brand-dark: #176269;
+    --star-off: #c7cfd1;
+    --star-on: #f4a340;
+    --star-on-dark: #d6821d;
 }
 
 body {
@@ -37,6 +40,16 @@ header {
     background-color: var(--brand);
     color: #fff;
     padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo {
+    height: 48px;
+    width: auto;
+    border-radius: 10px;
+    object-fit: contain;
 }
 
 footer {
@@ -202,6 +215,22 @@ main {
     color: var(--text-main);
 }
 
+.review-stars {
+    display: inline-flex;
+    gap: 2px;
+    vertical-align: middle;
+}
+
+.review-stars .star {
+    color: var(--star-off);
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.review-stars .star.filled {
+    color: var(--star-on);
+}
+
 /* Add Review Form Styles */
 #add-review {
     background-color: var(--surface);
@@ -269,6 +298,43 @@ main {
     font-family: var(--font-title);
     font-weight: 700;
     transition: background-color 0.3s;
+}
+
+.star-rating {
+    display: inline-flex;
+    gap: 0.35rem;
+}
+
+.star-btn {
+    background: none;
+    border: none;
+    color: var(--star-off);
+    cursor: pointer;
+    font-size: 1.8rem;
+    line-height: 1;
+    padding: 0;
+    transition: transform 0.15s ease, color 0.2s ease;
+}
+
+.star-btn:hover,
+.star-btn:focus-visible {
+    color: var(--star-on);
+    transform: scale(1.08);
+    outline: none;
+}
+
+.star-btn.is-active {
+    color: var(--star-on);
+}
+
+.star-btn.is-active:hover,
+.star-btn.is-active:focus-visible {
+    color: var(--star-on-dark);
+}
+
+#review-form-error {
+    color: #b42318;
+    margin-top: -0.25rem;
 }
 
 #review-form button:hover,
