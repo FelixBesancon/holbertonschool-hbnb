@@ -55,8 +55,43 @@ header {
 footer {
     background-color: var(--brand);
     color: #fff;
-    padding: 1rem;
+    padding: 0.35rem 1rem;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1rem;
+}
+
+.footer-icon {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+}
+
+.footer-rights {
     text-align: center;
+}
+
+.footer-credit {
+    font-family: var(--font-title);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    text-align: right;
+}
+
+@media (max-width: 640px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+        justify-items: start;
+    }
+
+    .footer-rights,
+    .footer-credit {
+        text-align: left;
+    }
 }
 
 nav a {
@@ -179,9 +214,43 @@ main {
     padding-left: 2rem;
 }
 
+.place-info .amenity-list {
+    padding-left: 0;
+}
+
 .place-info li {
     color: var(--text-soft);
     margin-bottom: 0.5rem;
+}
+
+.place-info .amenity-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-bottom: 1px solid #e7ecee;
+    padding: 0.35rem 0;
+}
+
+.amenity-main {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.amenity-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.amenity-name {
+    color: var(--text-soft);
+}
+
+.amenity-check {
+    color: var(--brand);
+    font-weight: 700;
 }
 
 .place-info li:before {
@@ -189,6 +258,10 @@ main {
     color: var(--brand);
     font-weight: bold;
     margin-right: 0.5rem;
+}
+
+.place-info .amenity-item:before {
+    content: none;
 }
 
 .place-info p {
@@ -230,6 +303,12 @@ main {
 .review-stars .star.filled {
     color: var(--star-on);
 }
+
+    .loading-msg {
+        color: var(--text-soft);
+        font-style: italic;
+        padding: 1rem 0;
+    }
 
 /* Add Review Form Styles */
 #add-review {
@@ -286,8 +365,8 @@ main {
     box-shadow: 0 0 5px rgba(21, 153, 168, 0.3);
 }
 
-#review-form button,
-.add-review button {
+#review-form button:not(.star-btn),
+.add-review button:not(.star-btn) {
     background-color: var(--brand);
     color: #fff;
     padding: 10px 20px;
@@ -337,8 +416,8 @@ main {
     margin-top: -0.25rem;
 }
 
-#review-form button:hover,
-.add-review button:hover {
+#review-form button:not(.star-btn):hover,
+.add-review button:not(.star-btn):hover {
     background-color: var(--brand-dark);
 }
 

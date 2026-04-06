@@ -229,8 +229,31 @@ function renderPlaceDetails(place) {
         ? `${place.owner.first_name || ""} ${place.owner.last_name || ""}`.trim()
         : "Unknown host";
 
+    const amenityIconPath = (name) => {
+        const key = String(name || "")
+            .trim()
+            .toLowerCase()
+            .replace(/[^a-z0-9\s]/g, "")
+            .replace(/\s+/g, "_");
+        return `images/icon_${key}.png`;
+    };
+
     const amenityItems = Array.isArray(place.amenities) && place.amenities.length
-        ? `<h3>Amenities:</h3><ul>${place.amenities.map((a) => `<li>${a.name}</li>`).join("")}</ul>`
+        ? `<h3>Amenities:</h3><ul class="amenity-list">${place.amenities
+            .map((a) => {
+                const name = a.name || "Amenity";
+                const icon = amenityIconPath(name);
+                return `
+                    <li class="amenity-item">
+                        <span class="amenity-main">
+                            <img class="amenity-icon" src="${icon}" alt="${name} icon" loading="lazy" onerror="this.style.display='none'">
+                            <span class="amenity-name">${name}</span>
+                        </span>
+                        <span class="amenity-check" aria-hidden="true">✓</span>
+                    </li>
+                `;
+            })
+            .join("")}</ul>`
         : "<h3>Amenities:</h3><p>No amenities listed.</p>";
 
     const wrapper = document.createElement("div");
@@ -269,7 +292,7 @@ function renderPlaceReviews(reviews) {
         const card = document.createElement("div");
         card.className = "review-card";
         card.innerHTML = `
-            <p><strong>User:</strong> ${authorName}</p>
+            <p><strong>Author:</strong> ${authorName}</p>
             <p><strong>Comment:</strong> ${review.text || ""}</p>
             <p><strong>Rating:</strong> ${renderStars(review.rating)}</p>
         `;
@@ -284,15 +307,22 @@ function initStarRatingWidget() {
         return;
     }
 
-    const setRating = (value) => {
-        ratingInput.value = String(value);
-        const buttons = starContainer.querySelectorAll(".star-btn");
-        buttons.forEach((button, index) => {
-            const active = index < value;
-            button.classList.toggle("is-active", active);
-            button.setAttribute("aria-checked", active ? "true" : "false");
-        });
-    };
+        let currentRating = 0;
+
+        const applyVisual = (value) => {
+            starContainer.querySelectorAll(".star-btn").forEach((btn, idx) => {
+                btn.classList.toggle("is-active", idx < value);
+            });
+        };
+
+        const setRating = (value) => {
+            currentRating = value;
+            ratingInput.value = String(value);
+            applyVisual(value);
+            starContainer.querySelectorAll(".star-btn").forEach((btn, idx) => {
+                btn.setAttribute("aria-checked", idx < value ? "true" : "false");
+            });
+        };
 
     starContainer.innerHTML = "";
     for (let i = 1; i <= 5; i += 1) {
@@ -303,10 +333,12 @@ function initStarRatingWidget() {
         button.setAttribute("aria-label", `${i} star${i > 1 ? "s" : ""}`);
         button.setAttribute("aria-checked", "false");
         button.addEventListener("click", () => setRating(i));
+            button.addEventListener("mouseenter", () => applyVisual(i));
         starContainer.appendChild(button);
     }
 
-    setRating(0);
+        starContainer.addEventListener("mouseleave", () => applyVisual(currentRating));
+        setRating(0);
 }
 
 async function submitReview(placeId, text, rating) {
@@ -374,6 +406,8 @@ async function initPlacePage() {
         addReviewLink.href = `add_review.html?id=${encodeURIComponent(placeId)}`;
     }
 
+        placeDetails.innerHTML = "<p class=\"loading-msg\">Loading…</p>";
+
     try {
         const [place, reviews] = await Promise.all([
             fetchPlaceDetails(placeId),
@@ -415,7 +449,10 @@ function initAddReviewPage() {
     }
 
     if (context) {
-        context.textContent = `Reviewing place ID: ${placeId}`;
+        context.textContent = "Loading place…";
+        fetchPlaceDetails(placeId)
+            .then((place) => { context.textContent = `Reviewing: ${place.title}`; })
+            .catch(() => { context.textContent = `Place ID: ${placeId}`; });
     }
 
     reviewForm.addEventListener("submit", async (event) => {

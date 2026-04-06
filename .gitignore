@@ -22,6 +22,10 @@ instance/
 *.db
 *.sqlite3
 
+# Keep Part 4 review snapshot database versioned
+!part4/hbnb/instance/
+!part4/hbnb/instance/hbnb.db
+
 # =========================
 # Logs
 # =========================

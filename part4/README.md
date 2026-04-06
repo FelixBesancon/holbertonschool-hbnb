@@ -148,7 +148,7 @@ Static frontend served alongside the Flask API.
 
 ### config.py
 **Handles environment configuration**:
- - `SQLALCHEMY_DATABASE_URI` — SQLite by default (`sqlite:///hbnb.db`), overridable via `DATABASE_URL` env var
+ - `SQLALCHEMY_DATABASE_URI` — SQLite by default (`sqlite:///hbnb.db`), which resolves to `hbnb/instance/hbnb.db` in this project, overridable via `DATABASE_URL` env var
  - `SECRET_KEY` — overridable via `SECRET_KEY` env var
  - `SQLALCHEMY_TRACK_MODIFICATIONS = False`
 
@@ -336,6 +336,12 @@ erDiagram
    python -m http.server 8000
    ```
    The frontend will be available at http://localhost:8000
+
+### Database File (for review)
+
+- Active database file path: `part4/hbnb/instance/hbnb.db`
+- This repository is configured to allow committing this specific DB snapshot for reviewer reproducibility.
+- If needed, regenerate data with your setup scripts, then commit the updated DB file.
 
 ### Testing Authentication (Task 2)
 
