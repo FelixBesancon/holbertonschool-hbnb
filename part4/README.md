@@ -1,11 +1,11 @@
-# HBnB Evolution – Part 3
-## Authentication & Database Integration
+# HBnB Evolution – Part 4
+## Full-Stack Integration (Frontend)
 
 ---
 
 ## 1. Overview
 
-This part of the HBnB Evolution project introduces authentication, authorization, and database persistence to transform the application into a secure and production-ready backend.
+This part of the HBnB Evolution project adds a dynamic frontend that communicates with the authenticated backend built in Part 3.
 
 The application now integrates:
 
@@ -13,9 +13,9 @@ The application now integrates:
  - Role-based access control (admin vs user)
  - Persistent storage with SQLAlchemy (SQLite for development)
  - Fully mapped relational database
- - Database schema visualization using Mermaid.js
+ - Dynamic frontend pages served from `front/`
 
-This phase marks the transition from a prototype (in-memory storage) to a real-world backend architecture.
+This phase connects the backend API to a functional HTML/CSS/JS user interface.
 
 ---
 
@@ -48,8 +48,14 @@ hbnb/
 │   │   ├── __init__.py
 │   │   ├── repository.py
 │   │   ├── user_repository.py
-├── test_db/
-│   ├── test_db.py
+├── front/
+│   ├── index.html
+│   ├── login.html
+│   ├── place.html
+│   ├── add_review.html
+│   ├── scripts.js
+│   ├── styles.css
+│   └── images/
 ├── schema.sql
 ├── run.py
 ├── config.py
@@ -129,10 +135,22 @@ Defines database models mapped with SQLAlchemy.
  - flask-bcrypt
  - flask-jwt-extended
 
+### front/
+Static frontend served alongside the Flask API.
+
+ - `index.html` — lists all available places with price filter
+ - `login.html` — login form (JWT token stored client-side)
+ - `place.html` — detail view of a place with amenities and reviews
+ - `add_review.html` — authenticated form to submit a review
+ - `scripts.js` — all dynamic logic (fetch API, DOM manipulation, auth)
+ - `styles.css` — styling
+ - `images/` — static assets (icons, logo)
+
 ### config.py
 **Handles environment configuration**:
- - SQLite (development)
- - MySQL (production-ready setup)
+ - `SQLALCHEMY_DATABASE_URI` — SQLite by default (`sqlite:///hbnb.db`), overridable via `DATABASE_URL` env var
+ - `SECRET_KEY` — overridable via `SECRET_KEY` env var
+ - `SQLALCHEMY_TRACK_MODIFICATIONS = False`
 
 ### run.py
 **Application entry point.**
@@ -239,7 +257,7 @@ erDiagram
 
 1. **Clone the repository**:
    - git clone https://github.com/AdeleM-prog/holbertonschool-hbnb.git
-   - cd holbertonschool-hbnb/part3
+   - cd holbertonschool-hbnb/part4
 
 2. **Install dependencies**:
    - pip install -r requirements.txt
@@ -252,35 +270,14 @@ erDiagram
 
 ---
 
-## 8. Database Testing
-
-SQL scripts are provided to generate and test the database schema independently of the ORM.
-
-### Files
-- `schema.sql` — full database schema in raw SQL
-- `test_db/test_db.py` — generates initial data and runs full CRUD tests with cascade verification
-
-### Run the tests
-```bash
-python3 test_db/test_db.py
-```
-
-### What is tested:
-- CREATE: admin user, 2 regular users, 2 places, 3 amenities, 1 review
-- READ: all entities with joins
-- UPDATE: place price, review text/rating, user name
-- DELETE: user deletion with cascade verification (place, reviews, amenity links)
-
----
-
-## 9. API Documentation
+## 8. API Documentation
 
 Available at:
  - http://localhost:5000/api/v1/
 
 ---
 
-## 10. Key Features
+## 9. Key Features
 
  - JWT Authentication
  - Role-based authorization (admin / user)
@@ -289,11 +286,12 @@ Available at:
  - Secure password hashing (bcrypt)
  - Full CRUD with database
  - Data validation & integrity
+ - Dynamic frontend (HTML/CSS/JS)
  - ER Diagram visualization with Mermaid
 
 ---
 
-## 11. Validation Rules
+## 10. Validation Rules
 
  - Required fields enforced
  - Types validated
@@ -316,10 +314,9 @@ Available at:
 
 ---
 
-## 13. Authors
+## 13. Author
 
 Project developed as part of the Holberton School curriculum.
 
-Team:
-- **Adele Megelink**: https://github.com/AdeleM-prog
+Contributor:
 - **Felix Besançon**: https://github.com/FelixBesancon
